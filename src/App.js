@@ -11,7 +11,7 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to React</h1>
         </header>
-        <input type="file" accept="image/*;capture=camera" multiple>select multiple files</input>
+        <input type="file" accept="image/*;capture=camera" multiple />
       </div>
     );
   }
