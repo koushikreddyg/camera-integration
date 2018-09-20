@@ -4,14 +4,34 @@ import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
+  
+  componentDidMount(){
+    if (navigator.getUserMedia) {
+      // Request the camera.
+      navigator.getUserMedia(
+        // Constraints
+        {
+          video: true
+        },
+    
+        // Success Callback
+        function(localMediaStream) {
+    
+        },
+    
+        // Error Callback
+        function(err) {
+          // Log the error to the console.
+          console.log('The following error occurred when trying to use getUserMedia: ' + err);
+        }
+      );
+    
+    }
+  }
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <input type="file" accept="image/*;capture=camera" multiple />
+       
       </div>
     );
   }
