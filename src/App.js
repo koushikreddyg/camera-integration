@@ -4,34 +4,18 @@ import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
-  
   componentDidMount(){
-    if (navigator.getUserMedia) {
-      // Request the camera.
-      navigator.getUserMedia(
-        // Constraints
-        {
-          video: true
-        },
     
-        // Success Callback
-        function(localMediaStream) {
-    
-        },
-    
-        // Error Callback
-        function(err) {
-          // Log the error to the console.
-          console.log('The following error occurred when trying to use getUserMedia: ' + err);
-        }
-      );
-    
-    }
+  }
+  
+  onChange=(event)=>{
+    console.log(__dirname)
+    console.log(event.target.files)
   }
   render() {
     return (
       <div className="App">
-       
+      <input type="file" accept="image/*" capture="camera" onChange={this.onChange}/>
       </div>
     );
   }
