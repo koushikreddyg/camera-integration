@@ -15,7 +15,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-      <input type="file" accept="image/*" capture="camera" onChange={this.onChange}/>
+      <input type="file" capture="camera" onChange={this.onChange}/>
       </div>
     );
   }
