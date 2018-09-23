@@ -60,9 +60,9 @@ class App extends Component {
     console.log(imagePreviewUrl)
     return (
       <div >
-        <input type="file" capture="camera" id="camera" multiple className="d-none" onChange={this.fileSelectorEvent} />
+        <input type="file" id="camera_device" multiple className="d-none" onChange={this.fileSelectorEvent} />
 
-        <label className="btn btn-primary" htmlFor="camera">Choose file</label>
+        <label className="btn btn-primary" htmlFor="camera_device">Choose file</label>
 
 
         {this.renderImages()}
