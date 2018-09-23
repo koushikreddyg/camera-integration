@@ -7,8 +7,8 @@ class App extends Component {
 
   state = {
     selectedFile: [],
-    file:'',
-    imagePreviewUrl:''
+    file: '',
+    imagePreviewUrl: ''
   }
 
 
@@ -18,37 +18,45 @@ class App extends Component {
   //     // TODO: do something with -> this.state.file
   //     console.log('handle uploading-', this.state.file);
   //   }
-  
-    fileSelectorEvent=(e)=> {
-      e.preventDefault();
-  
-      let reader = new FileReader();
-      let file = e.target.files[0];
-  
-      reader.onloadend = () => {
-        this.setState({
-          file: file,
-          imagePreviewUrl: reader.result
-        });
-      }
-  
-      reader.readAsDataURL(file)
-  
+
+  fileSelectorEvent = (e) => {
+    e.preventDefault();
+
+    let reader = new FileReader();
+    let file = e.target.files[0];
+
+    reader.onloadend = () => {
+      this.setState({
+        file: file,
+        imagePreviewUrl: reader.result
+      });
+    }
+
+    reader.readAsDataURL(file)
+
   }
 
+  renderImages = () =>
+     
+      this.state.imagePreviewUrl 
+      &&
+      <FileViewer 
+      url={this.state.imagePreviewUrl} 
+      onClick={()=>this.setState({imagePreviewUrl: '', file: ''})}
+      />
+
+  
   render() {
-    const{imagePreviewUrl, file}=this.state;
+    const { imagePreviewUrl, file } = this.state;
     console.log(imagePreviewUrl)
     return (
       <div >
         <input type="file" capture="camera" id="camera" className="d-none" onChange={this.fileSelectorEvent} />
 
         <label className="btn btn-primary" htmlFor="camera">Choose file</label>
-      
-      
-      <FileViewer url={imagePreviewUrl} onClick={()=>{
-        console.log('button is clicked')
-      }} />
+
+
+        {this.renderImages()}
       </div>
     );
   }
