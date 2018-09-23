@@ -8,7 +8,7 @@ class App extends Component {
   state = {
     selectedFile: [],
     file: '',
-    imagePreviewUrl: ''
+    imagePreviewUrl: []
   }
 
 
@@ -20,30 +20,39 @@ class App extends Component {
   //   }
 
   fileSelectorEvent = (e) => {
-    e.preventDefault();
+    for (let i = 0; i <= e.target.files.length-1; i++){
+      let reader = new FileReader();
+      let file = e.target.files[i];
+      reader.readAsDataURL(file)
+      reader.onloadend = () => {
+        var data = reader.result;
+       
+          this.setState({
+            file: file,
+            imagePreviewUrl: this.state.imagePreviewUrl.concat(reader.result),
+            noImage: false,
+            ImageChoosen: true
+          });
+      
+        }
 
-    let reader = new FileReader();
-    let file = e.target.files[0];
-
-    reader.onloadend = () => {
-      this.setState({
-        file: file,
-        imagePreviewUrl: reader.result
-      });
+        
+     
     }
-
-    reader.readAsDataURL(file)
-
   }
 
   renderImages = () =>
      
-      this.state.imagePreviewUrl 
+      !!this.state.imagePreviewUrl.length 
       &&
-      <FileViewer 
-      url={this.state.imagePreviewUrl} 
-      onClick={()=>this.setState({imagePreviewUrl: '', file: ''})}
-      />
+      this.state.imagePreviewUrl.map((item, i)=> 
+     
+     <FileViewer 
+     key={i}
+      url={item} 
+      // onClick={()=>this.setState({imagePreviewUrl: '', file: ''})}
+      /> )
+     
 
   
   render() {
@@ -51,7 +60,7 @@ class App extends Component {
     console.log(imagePreviewUrl)
     return (
       <div >
-        <input type="file" capture="camera" id="camera" className="d-none" onChange={this.fileSelectorEvent} />
+        <input type="file" capture="camera" id="camera" multiple className="d-none" onChange={this.fileSelectorEvent} />
 
         <label className="btn btn-primary" htmlFor="camera">Choose file</label>
 
