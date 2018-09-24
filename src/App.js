@@ -3,33 +3,41 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import FileViewer from "./FileViewer";
 import jsPDF from "jspdf";
 
+const doc = new jsPDF();
 class App extends Component {
   state = {
     imagePreviewUrl: [],
-    pdfData:[],
+    pdfData: [],
   };
 
-  uploadData=(e)=>{
+  uploadData = (e) => {
     e.preventDefault();
-    const doc = new jsPDF();
-    const pdfReader= new FileReader();
-     
-    this.state.imagePreviewUrl.map((data)=>{
-      
-      doc.setFontSize(40);
-      doc.text(90, 50, "");
-      doc.addImage(data, "JPEG", 15, 40, 180, 160);
-     
-      pdfReader.onloadend=()=>{
-        this.setState({pdfData: this.state.pdfData.concat(pdfReader.result)})
-       }
-    })
-    const pdfData=doc.output('blob')
-    pdfReader.readAsDataURL(pdfData);
-    console.log(pdfData)
-      doc.save('koushik.pdf')
-      
     
+    const pdfReader = new FileReader();
+   
+
+    this.state.imagePreviewUrl.map((data) => {
+
+      // doc.setFontSize(40);
+      // doc.text(90, 50, "");
+
+      doc.addImage(data, "", 15, 40, 180, 160);
+     
+      
+
+      pdfReader.onloadend = () => {
+        this.setState({ pdfData: this.state.pdfData.concat([pdfReader.result]) })
+        console.log(pdfReader.result);
+      
+      }
+     
+
+    })
+    const pdfData = doc.output('blob')
+    pdfReader.readAsDataURL(pdfData);
+    // doc.save('koushik')
+
+
 
   }
 
@@ -38,25 +46,25 @@ class App extends Component {
       const reader = new FileReader();
       const file = e.target.files[i];
       reader.readAsDataURL(file);
-      reader.onloadend = () =>{
+      reader.onloadend = () => {
         this.setState({
-          imagePreviewUrl: this.state.imagePreviewUrl.concat(reader.result)
+          imagePreviewUrl: this.state.imagePreviewUrl.concat([reader.result])
         });
-    //  var doc = new jsPDF();
-    //   doc.setFontSize(40);
-    //   doc.text(90, 50, "");
-    //   const data= doc.addImage(reader.result, "JPEG", 15, 40, 180, 160);
-    //   const pdfData=doc.output('blob')
-    //   const pdfReader= new FileReader();
-    //   pdfReader.readAsDataURL(pdfData);
-    //   pdfReader.onloadend=()=>{
-    //     this.setState({pdfData: this.state.pdfData.concat(pdfReader.result)})
-    //   }
-      // console.log(data)
-       // doc.save(this.state.pdfData)
-      // console.log(ronaldo)
+        //  var doc = new jsPDF();
+        //   doc.setFontSize(40);
+        //   doc.text(90, 50, "");
+        //   const data= doc.addImage(reader.result, "JPEG", 15, 40, 180, 160);
+        //   const pdfData=doc.output('blob')
+        //   const pdfReader= new FileReader();
+        //   pdfReader.readAsDataURL(pdfData);
+        //   pdfReader.onloadend=()=>{
+        //     this.setState({pdfData: this.state.pdfData.concat(pdfReader.result)})
+        //   }
+        // console.log(data)
+        // doc.save(this.state.pdfData)
+        // console.log(ronaldo)
       }
-        
+
     }
   };
 
@@ -66,11 +74,12 @@ class App extends Component {
       <FileViewer
         key={i}
         url={item}
-        // onClick={()=>this.setState({imagePreviewUrl: '', file: ''})}
+      // onClick={()=>this.setState({imagePreviewUrl: '', file: ''})}
       />
     ));
 
   render() {
+    console.log(this.state.pdfData)
     return (
       <div>
         <input
@@ -84,9 +93,10 @@ class App extends Component {
         <label className="btn btn-primary" htmlFor="camera_device">
           Choose file
         </label>
-        
+
         {this.renderImages()}
         <br />
+        {/* <a  download="pdfTitle" href={this.state.imagePreviewUrl} title='Download pdf document' >Koushik</a> */}
         <button className="btn btn-warning" onClick={this.uploadData}>upload to pdf</button>
       </div>
     );
