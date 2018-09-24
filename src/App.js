@@ -6,8 +6,32 @@ import jsPDF from "jspdf";
 class App extends Component {
   state = {
     imagePreviewUrl: [],
-    pdfData:'',
+    pdfData:[],
   };
+
+  uploadData=(e)=>{
+    e.preventDefault();
+    const doc = new jsPDF();
+    const pdfReader= new FileReader();
+     
+    this.state.imagePreviewUrl.map((data)=>{
+      
+      doc.setFontSize(40);
+      doc.text(90, 50, "");
+      doc.addImage(data, "JPEG", 15, 40, 180, 160);
+     
+      pdfReader.onloadend=()=>{
+        this.setState({pdfData: this.state.pdfData.concat(pdfReader.result)})
+       }
+    })
+    const pdfData=doc.output('blob')
+    pdfReader.readAsDataURL(pdfData);
+    console.log(pdfData)
+      doc.save('koushik.pdf')
+      
+    
+
+  }
 
   fileSelectorEvent = async e => {
     for (let i = 0; i <= e.target.files.length - 1; i++) {
@@ -18,18 +42,18 @@ class App extends Component {
         this.setState({
           imagePreviewUrl: this.state.imagePreviewUrl.concat(reader.result)
         });
-     var doc = new jsPDF();
-      doc.setFontSize(40);
-      doc.text(90, 50, "");
-      const data= doc.addImage(reader.result, "JPEG", 15, 40, 180, 160);
-      const pdfData=doc.output('blob')
-      const pdfReader= new FileReader();
-      pdfReader.readAsDataURL(pdfData);
-      pdfReader.onloadend=()=>{
-        this.setState({pdfData: pdfReader.result})
-      }
+    //  var doc = new jsPDF();
+    //   doc.setFontSize(40);
+    //   doc.text(90, 50, "");
+    //   const data= doc.addImage(reader.result, "JPEG", 15, 40, 180, 160);
+    //   const pdfData=doc.output('blob')
+    //   const pdfReader= new FileReader();
+    //   pdfReader.readAsDataURL(pdfData);
+    //   pdfReader.onloadend=()=>{
+    //     this.setState({pdfData: this.state.pdfData.concat(pdfReader.result)})
+    //   }
       // console.log(data)
-       doc.save(this.state.pdfData)
+       // doc.save(this.state.pdfData)
       // console.log(ronaldo)
       }
         
@@ -47,7 +71,6 @@ class App extends Component {
     ));
 
   render() {
-    console.log(this.state.pdfData)
     return (
       <div>
         <input
@@ -61,8 +84,10 @@ class App extends Component {
         <label className="btn btn-primary" htmlFor="camera_device">
           Choose file
         </label>
-        <object src={this.state.pdfData}/>
+        
         {this.renderImages()}
+        <br />
+        <button className="btn btn-warning" onClick={this.uploadData}>upload to pdf</button>
       </div>
     );
   }
