@@ -16,7 +16,7 @@ class App extends Component {
     const pdfReader = new FileReader();
    
 
-    this.state.imagePreviewUrl.map((data) => {
+    this.state.imagePreviewUrl.forEach((data) => {
 
       // doc.setFontSize(40);
       // doc.text(90, 50, "");
@@ -24,12 +24,12 @@ class App extends Component {
       doc.addImage(data, "", 15, 40, 180, 160);
      
       
-
-      pdfReader.onloadend = () => {
-        this.setState({ pdfData: this.state.pdfData.concat([pdfReader.result]) })
-        console.log(pdfReader.result);
+      console.log(1)
+     //  pdfReader.onloadend = () => 
+        this.setState({ pdfData: this.state.pdfData.concat(1) })
+        
       
-      }
+      
      
 
     })
@@ -47,22 +47,18 @@ class App extends Component {
       const file = e.target.files[i];
       reader.readAsDataURL(file);
       reader.onloadend = () => {
-        this.setState({
-          imagePreviewUrl: this.state.imagePreviewUrl.concat([reader.result])
-        });
-        //  var doc = new jsPDF();
-        //   doc.setFontSize(40);
-        //   doc.text(90, 50, "");
-        //   const data= doc.addImage(reader.result, "JPEG", 15, 40, 180, 160);
-        //   const pdfData=doc.output('blob')
-        //   const pdfReader= new FileReader();
-        //   pdfReader.readAsDataURL(pdfData);
-        //   pdfReader.onloadend=()=>{
-        //     this.setState({pdfData: this.state.pdfData.concat(pdfReader.result)})
-        //   }
-        // console.log(data)
-        // doc.save(this.state.pdfData)
-        // console.log(ronaldo)
+        // this.setState({
+        //   imagePreviewUrl: this.state.imagePreviewUrl.concat([reader.result])
+        // });
+          // doc.text(90, 50, "");
+          doc.addImage(reader.result/* , file.name, 15, 40, 180, 160 */);
+          const pdfData=doc.output('blob')
+          const pdfReader= new FileReader();
+          pdfReader.readAsDataURL(pdfData);
+          pdfReader.onloadend=()=>{
+            this.setState({pdfData: this.state.pdfData.concat(pdfReader.result)})
+          }
+       doc.save(this.state.pdfData)
       }
 
     }
@@ -79,7 +75,6 @@ class App extends Component {
     ));
 
   render() {
-    console.log(this.state.pdfData)
     return (
       <div>
         <input
@@ -96,7 +91,7 @@ class App extends Component {
 
         {this.renderImages()}
         <br />
-        {/* <a  download="pdfTitle" href={this.state.imagePreviewUrl} title='Download pdf document' >Koushik</a> */}
+         <a  download="pdfTitle" href={this.state.pdfData} title='Download pdf document' >Koushik</a> 
         <button className="btn btn-warning" onClick={this.uploadData}>upload to pdf</button>
       </div>
     );
