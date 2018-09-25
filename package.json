@@ -8,6 +8,8 @@
     "easy-pdf-merge": "^0.2.0",
     "jspdf": "^1.4.1",
     "lodash": "^4.17.11",
+    "pdf-merge": "^1.1.0",
+    "pdfjs": "^2.1.0",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-scripts": "1.1.5"

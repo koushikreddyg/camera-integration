@@ -2,29 +2,31 @@ import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import FileViewer from "./FileViewer";
 import jsPDF from "jspdf";
-import merge from 'easy-pdf-merge';
-import fs from 'fs';
-import {get} from 'lodash';
+
 
 const doc = new jsPDF();
 class App extends Component {
   state = {
     imagePreviewUrl: [],
-    pdfData: [],
+    pdfData: '',
   };
 
-  uploadData = (e) => {
-   
-    fs.writeFile("./final_pdf.pdf", Buffer.concat([get(this.state.pdfData[0]), get(this.state.pdfData[1])]), function(err) {
-      if(err) {
-          return console.log(err);
-      }
-  
-      console.log("The file was saved!");
-  });
-    
-   
-   
+  uploadData = () => {
+    for (let i = 0; i <= this.state.imagePreviewUrl.length - 1; i++) {
+      doc.addImage(this.state.imagePreviewUrl[i] , 'png',  15, 40, 180, 160);  
+      doc.addPage(); 
+    }
+    const pdfData=doc.output('blob')
+          const pdfReader= new FileReader();
+          pdfReader.readAsDataURL(pdfData);
+          pdfReader.onloadend=()=>{
+            // doc.addPage(); 
+            // doc.addImage(this.state.imagePreviewUrl[1] , ,15, 40, 180, 160); 
+           
+             console.log(pdfReader.result)
+             
+            }
+   doc.save('koushik.pdf')
       
   }
 
@@ -34,22 +36,13 @@ class App extends Component {
       const file = e.target.files[i];
       reader.readAsDataURL(file);
       reader.onloadend = () => {
-        // this.setState({
-        //   imagePreviewUrl: this.state.imagePreviewUrl.concat([reader.result])
-        // });
-          // doc.text(90, 50, "");
-          doc.addImage(reader.result , file.name, 15, 40, 180, 160);
-          const pdfData=doc.output('blob')
-          const pdfReader= new FileReader();
-          pdfReader.readAsDataURL(pdfData);
-          pdfReader.onloadend=()=>{
-            
-           
-             this.setState({pdfData: this.state.pdfData.concat([pdfReader.result])})
-             
-            }
+        this.setState({
+          imagePreviewUrl: this.state.imagePreviewUrl.concat([reader.result])
+         });
+          
+          
           }
-      // doc.save(this.state.pdfData)
+      
       }
 
     }
@@ -66,8 +59,14 @@ class App extends Component {
     ));
 
   render() {
+    const {imagePreviewUrl, pdfData}= this.state;
     return (
       <div>
+        {
+           (
+            <button className="btn btn-warning" onClick={this.uploadData}>upload to pdf</button>
+          )
+        }
         <input
           type="file"
           id="camera_device"
@@ -82,8 +81,8 @@ class App extends Component {
 
         {this.renderImages()}
         <br />
-         <a  download="pdfTitle" href={this.state.pdfData} title='Download pdf document' >Koushik</a> 
-        <button className="btn btn-warning" onClick={this.uploadData}>upload to pdf</button>
+         {/* <a  download="pdfTitle" href={this.state.pdfData} title='Download pdf document' >Koushik</a>  */}
+        
       </div>
     );
   }
