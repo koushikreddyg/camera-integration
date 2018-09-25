@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import FileViewer from "./FileViewer";
 import jsPDF from "jspdf";
+import merge from 'easy-pdf-merge';
+import fs from 'fs';
+import {get} from 'lodash';
 
 const doc = new jsPDF();
 class App extends Component {
@@ -11,34 +14,18 @@ class App extends Component {
   };
 
   uploadData = (e) => {
-    e.preventDefault();
-    
-    const pdfReader = new FileReader();
    
-
-    this.state.imagePreviewUrl.forEach((data) => {
-
-      // doc.setFontSize(40);
-      // doc.text(90, 50, "");
-
-      doc.addImage(data, "", 15, 40, 180, 160);
-     
+    fs.writeFile("./final_pdf.pdf", Buffer.concat([get(this.state.pdfData[0]), get(this.state.pdfData[1])]), function(err) {
+      if(err) {
+          return console.log(err);
+      }
+  
+      console.log("The file was saved!");
+  });
+    
+   
+   
       
-      console.log(1)
-     //  pdfReader.onloadend = () => 
-        this.setState({ pdfData: this.state.pdfData.concat(1) })
-        
-      
-      
-     
-
-    })
-    const pdfData = doc.output('blob')
-    pdfReader.readAsDataURL(pdfData);
-    // doc.save('koushik')
-
-
-
   }
 
   fileSelectorEvent = async e => {
@@ -51,18 +38,22 @@ class App extends Component {
         //   imagePreviewUrl: this.state.imagePreviewUrl.concat([reader.result])
         // });
           // doc.text(90, 50, "");
-          doc.addImage(reader.result/* , file.name, 15, 40, 180, 160 */);
+          doc.addImage(reader.result , file.name, 15, 40, 180, 160);
           const pdfData=doc.output('blob')
           const pdfReader= new FileReader();
           pdfReader.readAsDataURL(pdfData);
           pdfReader.onloadend=()=>{
-            this.setState({pdfData: this.state.pdfData.concat(pdfReader.result)})
+            
+           
+             this.setState({pdfData: this.state.pdfData.concat([pdfReader.result])})
+             
+            }
           }
-       doc.save(this.state.pdfData)
+      // doc.save(this.state.pdfData)
       }
 
     }
-  };
+  
 
   renderImages = () =>
     !!this.state.imagePreviewUrl.length &&
