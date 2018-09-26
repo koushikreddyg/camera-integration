@@ -2,34 +2,70 @@ import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import FileViewer from "./FileViewer";
 import jsPDF from "jspdf";
-
+import axios from "axios";
 
 const doc = new jsPDF();
 class App extends Component {
   state = {
     imagePreviewUrl: [],
-    pdfData: '',
+    pdfData: "",
+    visible: false
   };
 
   uploadData = () => {
+   
     for (let i = 0; i <= this.state.imagePreviewUrl.length - 1; i++) {
-     
-      doc.addImage(this.state.imagePreviewUrl[i] , 'png',  20, 40, 180, 160);  
-      doc.addPage(); 
+
+      doc.addImage(this.state.imagePreviewUrl[i] , 'png',  20, 40, 180, 160);
+      doc.addPage();
      }
     const pdfData=doc.output('blob')
           const pdfReader= new FileReader();
           pdfReader.readAsDataURL(pdfData);
           pdfReader.onloadend=()=>{
-            // doc.addPage(); 
-            // doc.addImage(this.state.imagePreviewUrl[1] , ,15, 40, 180, 160); 
+            // doc.addPage();
+            // doc.addImage(this.state.imagePreviewUrl[1] , ,15, 40, 180, 160);
               this.setState({pdfData: pdfReader.result})
-             
-             
+              axios (pdfReader.result, {
+                method: 'GET',
+                responseType: 'arraybuffer',
+                encoding: null,
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/pdf'
+                }
+                
+              })
+              .then(response => {
+                console.log(response)
+          
+                let newBlob = new Blob([response.data]);
+                let url  = URL.createObjectURL(newBlob);
+          
+                // IE doesn't allow using a blob object directly as link href
+                // instead it is necessary to use msSaveOrOpenBlob
+                if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                  window.navigator.msSaveOrOpenBlob(newBlob);
+                  return;
+                }
+          
+                // For other browsers:
+                // Create a link pointing to the ObjectURL containing the blob.
+                const data = window.URL.createObjectURL(newBlob);
+                let link   = document.createElement('a');
+                link.href  = data;
+                link.download = "full-package.pdf";
+                link.click();
+          
+                setTimeout(function(){
+                  // For Firefox it is necessary to delay revoking the ObjectURL
+                  window.URL.revokeObjectURL(data)
+                , 100});
+          
+              });
+
             }
-   
-      
-  }
+  };
 
   fileSelectorEvent = async e => {
     for (let i = 0; i <= e.target.files.length - 1; i++) {
@@ -38,16 +74,12 @@ class App extends Component {
       reader.readAsDataURL(file);
       reader.onloadend = () => {
         this.setState({
-          imagePreviewUrl: this.state.imagePreviewUrl.concat([reader.result])
-         });
-          
-          
-          }
-      
-      }
-
+          imagePreviewUrl: this.state.imagePreviewUrl.concat(reader.result)
+        });
+        
+      };
     }
-  
+  };
 
   renderImages = () =>
     !!this.state.imagePreviewUrl.length &&
@@ -55,20 +87,28 @@ class App extends Component {
       <FileViewer
         key={i}
         url={item}
-      // onClick={()=>this.setState({imagePreviewUrl: '', file: ''})}
+        // onClick={()=>this.setState({imagePreviewUrl: '', file: ''})}
       />
     ));
 
   render() {
-    const {imagePreviewUrl, pdfData}= this.state;
+    const { imagePreviewUrl, pdfData, visible } = this.state;
     return (
       <div>
         {
-           (
-            <button className="btn btn-warning" onClick={this.uploadData}>upload to pdf</button>
-          )
+          <button className="btn btn-warning" onClick={this.uploadData}>
+            upload to pdf
+          </button>
         }
-        <a  download="pdfTitle" href={this.state.pdfData} title='Download pdf document' >Koushik</a> 
+        {
+          <a
+            download="pdfTitle"
+            href={this.state.imagePreviewUrl}
+            title="Download pdf document"
+          >
+            Koushik
+          </a>
+        }
         <input
           type="file"
           id="camera_device"
@@ -83,7 +123,7 @@ class App extends Component {
           Choose file
         </label>
 
-        {this.renderImages()}
+        {/* this.renderImages() */}
         <br />
       </div>
     );
