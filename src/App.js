@@ -72,6 +72,8 @@ class App extends Component {
         <input
           type="file"
           id="camera_device"
+          accept="application/pdf;capture=camera"
+          
           multiple
           className="d-none"
           onChange={this.fileSelectorEvent}
