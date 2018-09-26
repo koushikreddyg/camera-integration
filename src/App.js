@@ -73,7 +73,7 @@ class App extends Component {
           type="file"
           id="camera_device"
           accept="application/pdf;capture=camera"
-          
+          capture="camera"
           multiple
           className="d-none"
           onChange={this.fileSelectorEvent}
