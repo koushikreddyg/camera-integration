@@ -4,7 +4,9 @@ import FileViewer from "./FileViewer";
 import jsPDF from "jspdf";
 import axios from "axios";
 
-const doc = new jsPDF();
+const doc = new jsPDF("p", "mm", "a4");
+var width = doc.internal.pageSize.width;    
+var height = doc.internal.pageSize.height;
 class App extends Component {
   state = {
     imagePreviewUrl: [],
@@ -16,7 +18,7 @@ class App extends Component {
    
     for (let i = 0; i <= this.state.imagePreviewUrl.length - 1; i++) {
 
-      doc.addImage(this.state.imagePreviewUrl[i] , 'png',  20, 40, 180, 160);
+      doc.addImage(this.state.imagePreviewUrl[i] , 'JPEG',  5, 5, 200, 280);
       doc.addPage();
      }
     const pdfData=doc.output('blob')
@@ -37,7 +39,6 @@ class App extends Component {
                 
               })
               .then(response => {
-                console.log(response)
           
                 let newBlob = new Blob([response.data]);
                 let url  = URL.createObjectURL(newBlob);
