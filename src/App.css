@@ -5,9 +5,6 @@
   color: #fff;
 }
 
-.imageDisplay{
-  
-}
 
 .imageList{
   
@@ -15,6 +12,18 @@
   white-space: nowrap;
   
   
+}
+
+.scrolling-wrapper {
+  display: flex;
+ flex-wrap: nowrap;
+ overflow-x: auto;
+
+
+}
+.card {
+  flex: 0 0 auto;
+  background-color: transparent
 }
 
 .image{
@@ -33,39 +42,49 @@
 .options{
   margin-top: 1.5vh;
   height: 5vh;
-  
+  display: flex;
+ flex-wrap: nowrap;
+ overflow-x: auto;
 
 }
 
 .input{
- margin-top: 10px;
- margin-left: 10px;
+padding-top:-2px;
+ margin-left: 2vw;
+ border-radius: 15px;
+ height: 3vh;
+ width: 76vw;
+ margin-right: 2vw;
+ border-color: transparent
 }
 
 .camera{
-
-  position: absolute;
-  left: 0;
-  margin-left: 3px;
-  height: 4vh;
-  width: 10vh;
+  margin-left: 2vw;
+  height: 3vh;
+  width: 7vw;
+  margin-top: 2px;
   font-size: 2vh;
-  padding-top: 0;
+  background-color:rgb(0, 128, 255);
+  border-radius: 5px;
   vertical-align: middle;
-  flex:1;
-  justify-content: center;
-  align-items: center;
+  text-align: center;
+  
 }
 .attachPdf{
-
- position: absolute;
- right: 0;
-margin-right: 3px;
-height: 4vh;
-width: 15vh;
-font-size: 2vh;
-padding-top: 0;
-margin: 0 auto;
+  margin-right: 2vw;
+  height: 3vh;
+  width: 7vw;
+  margin-top: 2px;
+  font-size: 2vh;
+  border-radius: 5px;
+  vertical-align: middle;
+  text-align: center;
+background-color:rgb(225, 255, 0);
+}
+.glyphicons{
+  width: 2vh;
+  height: 2vh;
+  padding-bottom: 2px;
 }
 
 

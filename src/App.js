@@ -3,8 +3,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import jsPDF from "jspdf";
 import axios from "axios";
 
-import FileViewer from './FileViewer';
+import next from './next.png'
+import cancel from './cancel.png'
 import "./App.css";
+
+import FileViewer from './FileViewer';
+
+
 
 const doc = new jsPDF("p", "mm", "a4");
 class App extends Component {
@@ -83,16 +88,12 @@ class App extends Component {
     
     return (
       <div className="App">
-    {/*  <div style={{position: 'absolute', paddingTop: 20, paddingLeft: 20, display: 'inline-block'}}>
-     
-      <input className="input" size="30"/>
-      </div>  */}
         <div className="imageDisplay">
 
           <img src={this.state.displayImage}   className="fullImage"/>
         </div>
         <div id="sliderWithOptions">
-        <div className="imageList row">
+        <div className="imageList scrolling-wrapper">
         {this.renderImages()}
         
         </div>
@@ -108,12 +109,14 @@ class App extends Component {
           onChange={this.fileSelectorEvent}
         />
 
-        <label className=" btn btn-primary camera " htmlFor="camera_device">
-          camera
+        <label className=" camera " htmlFor="camera_device">
+          <img src={next} className="glyphicons" />
         </label>
-
+        <input className="input"/>
         {/* <div  className=" btn btn-primary camera ">camera</div> */}
-        <div className=" btn btn-warning attachPdf" onClick={this.attachFile}>attach as pdf</div>
+        <div className= "attachPdf" onClick={this.attachFile}>
+        <img src={next} className="glyphicons" />
+        </div> 
         </div>
         </div>
         
