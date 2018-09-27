@@ -1,12 +1,10 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-
-import FileViewer from './FileViewer';
-import "./App.css";
-
 import jsPDF from "jspdf";
 import axios from "axios";
 
+import FileViewer from './FileViewer';
+import "./App.css";
 
 const doc = new jsPDF("p", "mm", "a4");
 class App extends Component {
@@ -15,11 +13,12 @@ class App extends Component {
     this.state = {
       imageUrls:[],
       pdfData: "",
+      displayImage:"https://www.w3schools.com/images/w3schools_green.jpg",
     };
   }
 
   renderImages=()=>
-    this.state.imageUrls.map(url=><FileViewer url={url} alt={url} />)
+    this.state.imageUrls.map((url,i)=><FileViewer key={i} url={url} onClick={()=>this.setState({displayImage: url})} alt={url} />)
   
     fileSelectorEvent = async e => {
       for (let i = 0; i <= e.target.files.length - 1; i++) {
@@ -28,7 +27,8 @@ class App extends Component {
         reader.readAsDataURL(file);
         reader.onloadend = () => {
           this.setState({
-            imageUrls: this.state.imageUrls.concat(reader.result)
+            imageUrls: this.state.imageUrls.concat(reader.result),
+            displayImage: reader.result
           });
           
         };
@@ -36,7 +36,6 @@ class App extends Component {
     };
 
     attachFile = () => {
-   
       for (let i = 0; i <= this.state.imageUrls.length - 1; i++) {
   
         doc.addImage(this.state.imageUrls[i] , 'JPEG',  5, 5, 200, 280);
@@ -58,7 +57,6 @@ class App extends Component {
                   
                 })
                 .then(response => {
-            
                   let newBlob = new Blob([response.data]);
                   let url  = URL.createObjectURL(newBlob);
                   if (window.navigator && window.navigator.msSaveOrOpenBlob) {
@@ -71,8 +69,7 @@ class App extends Component {
                   link.download = "full-package.pdf";
                   link.click();
             
-                  setTimeout(function(){
-                    // For Firefox it is necessary to delay revoking the ObjectURL
+                  setTimeout(()=>{
                     window.URL.revokeObjectURL(data)
                   , 100});
             
@@ -83,6 +80,7 @@ class App extends Component {
   
 
   render() {
+    
     return (
       <div className="App">
     {/*  <div style={{position: 'absolute', paddingTop: 20, paddingLeft: 20, display: 'inline-block'}}>
@@ -91,107 +89,12 @@ class App extends Component {
       </div>  */}
         <div className="imageDisplay">
 
-          <img src="https://www.w3schools.com/images/w3schools_green.jpg"   className="fullImage"/>
+          <img src={this.state.displayImage}   className="fullImage"/>
         </div>
         <div id="sliderWithOptions">
-        <div className="imageList">
+        <div className="imageList row">
         {this.renderImages()}
-          {/* <img
-            src="https://www.w3schools.com/images/w3schools_green.jpg"
-            alt="W3Schools.com"
-            // width="50"
-            // height="50"
-            className="image"
-            hspace="5"
-          />
-          <img
-            src="https://www.w3schools.com/images/w3schools_green.jpg"
-            alt="W3Schools.com"
-            // width="50"
-            // height="50"
-            className="image"
-            hspace="5"
-          />
-          <img
-            src="https://www.w3schools.com/images/w3schools_green.jpg"
-            alt="W3Schools.com"
-            // width="50"
-            // height="50"
-            className="image"
-            hspace="5"
-          />
-          <img
-            src="https://www.w3schools.com/images/w3schools_green.jpg"
-            alt="W3Schools.com"
-            // width="50"
-            // height="50"
-            className="image"
-            hspace="5"
-          />
-          <img
-            src="https://www.w3schools.com/images/w3schools_green.jpg"
-            alt="W3Schools.com"
-            // width="50"
-            // height="50"
-            className="image"
-            hspace="5"
-          />
-          <img
-            src="https://www.w3schools.com/images/w3schools_green.jpg"
-            alt="W3Schools.com"
-            // width="50"
-            // height="50"
-            className="image"
-            hspace="5"
-          />
-          <img
-            src="https://www.w3schools.com/images/w3schools_green.jpg"
-            alt="W3Schools.com"
-            // width="50"
-            // height="50"
-            className="image"
-            hspace="5"
-          />
-          <img
-            src="https://www.w3schools.com/images/w3schools_green.jpg"
-            alt="W3Schools.com"
-            // width="50"
-            // height="50"
-            className="image"
-            hspace="5"
-          />
-          <img
-            src="https://www.w3schools.com/images/w3schools_green.jpg"
-            alt="W3Schools.com"
-            // width="50"
-            // height="50"
-            className="image"
-            hspace="5"
-          />
-          <img
-            src="https://www.w3schools.com/images/w3schools_green.jpg"
-            alt="W3Schools.com"
-            // width="50"
-            // height="50"
-            className="image"
-            hspace="5"
-          />
-          <img
-            src="https://www.w3schools.com/images/w3schools_green.jpg"
-            alt="W3Schools.com"
-            // width="50"
-            // height="50"
-            className="image"
-            hspace="5"
-          />
-          <img
-            src="https://www.w3schools.com/images/w3schools_green.jpg"
-            alt="W3Schools.com"
-            // width="50"
-            // height="50"
-            className="image"
-            hspace="5"
-          /> */}
+        
         </div>
         <div  className="options">
 
@@ -210,7 +113,7 @@ class App extends Component {
         </label>
 
         {/* <div  className=" btn btn-primary camera ">camera</div> */}
-        <div className=" btn btn-warning attachPdf" onChange={this.attachFile}>attach as pdf</div>
+        <div className=" btn btn-warning attachPdf" onClick={this.attachFile}>attach as pdf</div>
         </div>
         </div>
         
