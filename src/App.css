@@ -1,27 +1,75 @@
 
 .App {
-  text-align: center;
+  height: 100vh;
+  background-color: #000;
+  color: #fff;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.imageDisplay{
+  
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+.imageList{
+  color: blue;
+  overflow-y: scroll;
+  white-space: nowrap;
+  
+  
 }
 
-.App-title {
-  font-size: 1.5em;
+.image{
+  border-radius: 5px;
+  height: 10vh;
+  width: 10vh;
 }
 
-.App-intro {
-  font-size: large;
+.fullImage{
+  padding: 10px;
+  height: 83vh;
+  width: 100vw;
+
 }
+
+.options{
+  margin-top: 1.5vh;
+  height: 5vh;
+  
+
+}
+
+.input{
+ margin-top: 10px;
+ margin-left: 10px;
+}
+
+.camera{
+
+  position: absolute;
+  left: 0;
+  margin-left: 3px;
+  height: 4vh;
+  width: 10vh;
+  font-size: 2vh;
+  padding-top: 0;
+  vertical-align: middle;
+  flex:1;
+  justify-content: center;
+  align-items: center;
+}
+.attachPdf{
+
+ position: absolute;
+ right: 0;
+margin-right: 3px;
+height: 4vh;
+width: 15vh;
+font-size: 2vh;
+padding-top: 0;
+margin: 0 auto;
+}
+
+
+
 
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }

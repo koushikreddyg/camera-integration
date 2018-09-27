@@ -1,10 +1,15 @@
 import React from 'react';
+import "./App.css";
 
-const FileViewer=({onClick, url})=>(
-    <div>
-        <p onClick={onClick}>remove me</p>
-        <img src={url}/>
-    </div>
+const FileViewer=({ url, alt})=>(
+      
+        <img
+            src={url}
+            alt={alt}
+            className="image"
+            hspace="5"
+          />
+  
 )
 
 export default FileViewer;

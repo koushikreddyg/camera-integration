@@ -1,115 +1,200 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import FileViewer from "./FileViewer";
+
+import FileViewer from './FileViewer';
+import "./App.css";
+
 import jsPDF from "jspdf";
 import axios from "axios";
 
+
 const doc = new jsPDF("p", "mm", "a4");
-var width = doc.internal.pageSize.width;    
-var height = doc.internal.pageSize.height;
 class App extends Component {
-  state = {
-    imagePreviewUrl: [],
-    pdfData: "",
-    visible: false
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      imageUrls:[],
+      pdfData: "",
+    };
+  }
 
-  uploadData = () => {
+  renderImages=()=>
+    this.state.imageUrls.map(url=><FileViewer url={url} alt={url} />)
+  
+    fileSelectorEvent = async e => {
+      for (let i = 0; i <= e.target.files.length - 1; i++) {
+        const reader = new FileReader();
+        const file = e.target.files[i];
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+          this.setState({
+            imageUrls: this.state.imageUrls.concat(reader.result)
+          });
+          
+        };
+      }
+    };
+
+    attachFile = () => {
    
-    for (let i = 0; i <= this.state.imagePreviewUrl.length - 1; i++) {
-
-      doc.addImage(this.state.imagePreviewUrl[i] , 'JPEG',  5, 5, 200, 280);
-      doc.addPage();
-     }
-    const pdfData=doc.output('blob')
-          const pdfReader= new FileReader();
-          pdfReader.readAsDataURL(pdfData);
-          pdfReader.onloadend=()=>{
-            // doc.addPage();
-            // doc.addImage(this.state.imagePreviewUrl[1] , ,15, 40, 180, 160);
-              this.setState({pdfData: pdfReader.result})
-              axios (pdfReader.result, {
-                method: 'GET',
-                responseType: 'arraybuffer',
-                encoding: null,
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Accept': 'application/pdf'
-                }
-                
-              })
-              .then(response => {
-          
-                let newBlob = new Blob([response.data]);
-                let url  = URL.createObjectURL(newBlob);
-          
-                // IE doesn't allow using a blob object directly as link href
-                // instead it is necessary to use msSaveOrOpenBlob
-                if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-                  window.navigator.msSaveOrOpenBlob(newBlob);
-                  return;
-                }
-          
-                // For other browsers:
-                // Create a link pointing to the ObjectURL containing the blob.
-                const data = window.URL.createObjectURL(newBlob);
-                let link   = document.createElement('a');
-                link.href  = data;
-                link.download = "full-package.pdf";
-                link.click();
-          
-                setTimeout(function(){
-                  // For Firefox it is necessary to delay revoking the ObjectURL
-                  window.URL.revokeObjectURL(data)
-                , 100});
-          
-              });
-
-            }
-  };
-
-  fileSelectorEvent = async e => {
-    for (let i = 0; i <= e.target.files.length - 1; i++) {
-      const reader = new FileReader();
-      const file = e.target.files[i];
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        this.setState({
-          imagePreviewUrl: this.state.imagePreviewUrl.concat(reader.result)
-        });
-        
-      };
-    }
-  };
-
-  renderImages = () =>
-    !!this.state.imagePreviewUrl.length &&
-    this.state.imagePreviewUrl.map((item, i) => (
-      <FileViewer
-        key={i}
-        url={item}
-        // onClick={()=>this.setState({imagePreviewUrl: '', file: ''})}
-      />
-    ));
+      for (let i = 0; i <= this.state.imageUrls.length - 1; i++) {
+  
+        doc.addImage(this.state.imageUrls[i] , 'JPEG',  5, 5, 200, 280);
+        doc.addPage();
+       }
+      const pdfData=doc.output('blob')
+            const pdfReader= new FileReader();
+            pdfReader.readAsDataURL(pdfData);
+            pdfReader.onloadend=()=>{
+                this.setState({pdfData: pdfReader.result})
+                axios (pdfReader.result, {
+                  method: 'GET',
+                  responseType: 'arraybuffer',
+                  encoding: null,
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/pdf'
+                  }
+                  
+                })
+                .then(response => {
+            
+                  let newBlob = new Blob([response.data]);
+                  let url  = URL.createObjectURL(newBlob);
+                  if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                    window.navigator.msSaveOrOpenBlob(newBlob);
+                    return;
+                  }
+                  const data = window.URL.createObjectURL(newBlob);
+                  let link   = document.createElement('a');
+                  link.href  = data;
+                  link.download = "full-package.pdf";
+                  link.click();
+            
+                  setTimeout(function(){
+                    // For Firefox it is necessary to delay revoking the ObjectURL
+                    window.URL.revokeObjectURL(data)
+                  , 100});
+            
+                });
+  
+              }
+    };
+  
 
   render() {
-    const { imagePreviewUrl, pdfData, visible } = this.state;
     return (
-      <div>
-        {
-          <button className="btn btn-warning" onClick={this.uploadData}>
-            upload to pdf
-          </button>
-        }
-        {
-          <a
-            download="pdfTitle"
-            href={this.state.imagePreviewUrl}
-            title="Download pdf document"
-          >
-            Koushik
-          </a>
-        }
+      <div className="App">
+    {/*  <div style={{position: 'absolute', paddingTop: 20, paddingLeft: 20, display: 'inline-block'}}>
+     
+      <input className="input" size="30"/>
+      </div>  */}
+        <div className="imageDisplay">
+
+          <img src="https://www.w3schools.com/images/w3schools_green.jpg"   className="fullImage"/>
+        </div>
+        <div id="sliderWithOptions">
+        <div className="imageList">
+        {this.renderImages()}
+          {/* <img
+            src="https://www.w3schools.com/images/w3schools_green.jpg"
+            alt="W3Schools.com"
+            // width="50"
+            // height="50"
+            className="image"
+            hspace="5"
+          />
+          <img
+            src="https://www.w3schools.com/images/w3schools_green.jpg"
+            alt="W3Schools.com"
+            // width="50"
+            // height="50"
+            className="image"
+            hspace="5"
+          />
+          <img
+            src="https://www.w3schools.com/images/w3schools_green.jpg"
+            alt="W3Schools.com"
+            // width="50"
+            // height="50"
+            className="image"
+            hspace="5"
+          />
+          <img
+            src="https://www.w3schools.com/images/w3schools_green.jpg"
+            alt="W3Schools.com"
+            // width="50"
+            // height="50"
+            className="image"
+            hspace="5"
+          />
+          <img
+            src="https://www.w3schools.com/images/w3schools_green.jpg"
+            alt="W3Schools.com"
+            // width="50"
+            // height="50"
+            className="image"
+            hspace="5"
+          />
+          <img
+            src="https://www.w3schools.com/images/w3schools_green.jpg"
+            alt="W3Schools.com"
+            // width="50"
+            // height="50"
+            className="image"
+            hspace="5"
+          />
+          <img
+            src="https://www.w3schools.com/images/w3schools_green.jpg"
+            alt="W3Schools.com"
+            // width="50"
+            // height="50"
+            className="image"
+            hspace="5"
+          />
+          <img
+            src="https://www.w3schools.com/images/w3schools_green.jpg"
+            alt="W3Schools.com"
+            // width="50"
+            // height="50"
+            className="image"
+            hspace="5"
+          />
+          <img
+            src="https://www.w3schools.com/images/w3schools_green.jpg"
+            alt="W3Schools.com"
+            // width="50"
+            // height="50"
+            className="image"
+            hspace="5"
+          />
+          <img
+            src="https://www.w3schools.com/images/w3schools_green.jpg"
+            alt="W3Schools.com"
+            // width="50"
+            // height="50"
+            className="image"
+            hspace="5"
+          />
+          <img
+            src="https://www.w3schools.com/images/w3schools_green.jpg"
+            alt="W3Schools.com"
+            // width="50"
+            // height="50"
+            className="image"
+            hspace="5"
+          />
+          <img
+            src="https://www.w3schools.com/images/w3schools_green.jpg"
+            alt="W3Schools.com"
+            // width="50"
+            // height="50"
+            className="image"
+            hspace="5"
+          /> */}
+        </div>
+        <div  className="options">
+
         <input
           type="file"
           id="camera_device"
@@ -120,12 +205,15 @@ class App extends Component {
           onChange={this.fileSelectorEvent}
         />
 
-        <label className="btn btn-primary" htmlFor="camera_device">
-          Choose file
+        <label className=" btn btn-primary camera " htmlFor="camera_device">
+          camera
         </label>
 
-        {/* this.renderImages() */}
-        <br />
+        {/* <div  className=" btn btn-primary camera ">camera</div> */}
+        <div className=" btn btn-warning attachPdf" onChange={this.attachFile}>attach as pdf</div>
+        </div>
+        </div>
+        
       </div>
     );
   }
