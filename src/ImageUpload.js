@@ -49,7 +49,9 @@ class App extends Component {
         this.setState({
           imageUrls: this.state.imageUrls.concat(reader.result),
           displayImage: reader.result
+          
         });
+        this.props.imagesLength(this.state.imageUrls.length)
       };
     }
   };
@@ -63,7 +65,7 @@ class App extends Component {
     const pdfReader = new FileReader();
     pdfReader.readAsDataURL(pdfData);
     pdfReader.onloadend = () => {
-      this.setState({ pdfData: pdfReader.result });
+      this.setState({ pdfData: pdfReader.result },()=>this.setState({imageUrls: []}));
       axios(pdfReader.result, {
         method: "GET",
         responseType: "arraybuffer",
@@ -92,14 +94,15 @@ class App extends Component {
     };
   };
 
-  onClose=()=>{
-    console.log('closed')
-  }
+  onClose=()=>this.setState({imageUrls: []})
 
   render() {
+    const doesContainImages=!!this.state.imageUrls.length
     return (
-      <div className="App">
-      <img src={cancel} className="close" onClick={this.onClose}/>
+      <div >
+      {doesContainImages &&(
+        <div className="App">
+          <img src={cancel} className="close" onClick={this.onClose}/>
         <div className="imageDisplay">
           <img src={this.state.displayImage} className="fullImage" />
         </div>
@@ -113,16 +116,7 @@ class App extends Component {
               htmlFor="camera_device"
             />
           </div>
-          <button className=" btn btn-warning options">
-            <input
-              type="file"
-              id="camera_device"
-              accept="application/pdf;capture=camera"
-              capture="camera"
-              multiple
-              className="d-none"
-              onChange={this.fileSelectorEvent}
-            />
+          <button className=" btn btn-warning options" onClick={this.attachFile}>
               Attach as PDF
             {/* <label className=" camera " htmlFor="camera_device">
               <img src={next} className="glyphicons" />
@@ -133,6 +127,23 @@ class App extends Component {
             </div> */}
           </button>
         </div>
+        </div>
+      )}
+      <input
+          type="file"
+          id="camera_device"
+          accept="application/pdf;capture=camera"
+          capture="camera"
+          multiple
+          className="d-none"
+          onChange={this.fileSelectorEvent}
+        />
+        {!doesContainImages && (
+          <label className="btn btn-primary" htmlFor="camera_device">
+            Choose file
+          </label>
+        )}
+      
       </div>
     );
   }
