@@ -1,55 +1,141 @@
-import React from 'react';
-export default class ImageUpload extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = {file: '',imagePreviewUrl: ''};
-    }
-  
-    _handleSubmit(e) {
-      e.preventDefault();
-      // TODO: do something with -> this.state.file
-      console.log('handle uploading-', this.state.file);
-    }
-  
-    _handleImageChange(e) {
-      e.preventDefault();
-  
-      let reader = new FileReader();
-      let file = e.target.files[0];
-  
+import React, { Component } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import jsPDF from "jspdf";
+import axios from "axios";
+
+import next from "./next.png";
+import cancel from "./cancel.png";
+import add from './add.png';
+import "./App.css";
+
+import FileViewer from "./FileViewer";
+
+const doc = new jsPDF("p", "mm", "a4");
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      imageUrls: [],
+      pdfData: "",
+      displayImage: "https://www.w3schools.com/images/w3schools_green.jpg"
+    };
+  }
+
+  deleteImage = item =>
+    this.setState(
+      { imageUrls: this.state.imageUrls.filter(url => item !== url) },
+      () => {
+        this.setState({ displayImage: this.state.imageUrls[0] });
+      }
+    );
+
+  renderImages = () =>
+    this.state.imageUrls.map((url, i) => (
+      <FileViewer
+        key={i}
+        url={url}
+        onClick={() => this.setState({ displayImage: url })}
+        onDeleteImage={() => this.deleteImage(url)}
+        alt={url}
+      />
+    ));
+
+  fileSelectorEvent = async e => {
+    for (let i = 0; i <= e.target.files.length - 1; i++) {
+      const reader = new FileReader();
+      const file = e.target.files[i];
+      reader.readAsDataURL(file);
       reader.onloadend = () => {
         this.setState({
-          file: file,
-          imagePreviewUrl: reader.result
+          imageUrls: this.state.imageUrls.concat(reader.result),
+          displayImage: reader.result
         });
-      }
-  
-      reader.readAsDataURL(file)
+      };
     }
-  
-    render() {
-      let {imagePreviewUrl} = this.state;
-      let $imagePreview = null;
-      if (imagePreviewUrl) {
-        $imagePreview = (<img src={imagePreviewUrl} />);
-      } else {
-        $imagePreview = (<div className="previewText">Please select an Image for Preview</div>);
-      }
-  
-      return (
-        <div className="previewComponent">
-          <form onSubmit={(e)=>this._handleSubmit(e)}>
-            <input className="fileInput" 
-              type="file" 
-              onChange={(e)=>this._handleImageChange(e)} />
-            <button className="submitButton" 
-              type="submit" 
-              onClick={(e)=>this._handleSubmit(e)}>Upload Image</button>
-          </form>
-          <div className="imgPreview">
-            {$imagePreview}
-          </div>
-        </div>
-      )
+  };
+
+  attachFile = () => {
+    for (let i = 0; i <= this.state.imageUrls.length - 1; i++) {
+      doc.addImage(this.state.imageUrls[i], "JPEG", 5, 5, 200, 280);
+      doc.addPage();
     }
+    const pdfData = doc.output("blob");
+    const pdfReader = new FileReader();
+    pdfReader.readAsDataURL(pdfData);
+    pdfReader.onloadend = () => {
+      this.setState({ pdfData: pdfReader.result });
+      axios(pdfReader.result, {
+        method: "GET",
+        responseType: "arraybuffer",
+        encoding: null,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/pdf"
+        }
+      }).then(response => {
+        let newBlob = new Blob([response.data]);
+        let url = URL.createObjectURL(newBlob);
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+          window.navigator.msSaveOrOpenBlob(newBlob);
+          return;
+        }
+        const data = window.URL.createObjectURL(newBlob);
+        let link = document.createElement("a");
+        link.href = data;
+        link.download = "full-package.pdf";
+        link.click();
+
+        setTimeout(() => {
+          window.URL.revokeObjectURL(data), 100;
+        });
+      });
+    };
+  };
+
+  onClose=()=>{
+    console.log('closed')
   }
+
+  render() {
+    return (
+      <div className="App">
+      <img src={cancel} className="close" onClick={this.onClose}/>
+        <div className="imageDisplay">
+          <img src={this.state.displayImage} className="fullImage" />
+        </div>
+        <div id="sliderWithOptions">
+          <div className="imageList scrolling-wrapper">
+            
+            {this.renderImages()}
+            <FileViewer
+              url={add}
+              hideDelete
+              htmlFor="camera_device"
+            />
+          </div>
+          <button className=" btn btn-warning options">
+            <input
+              type="file"
+              id="camera_device"
+              accept="application/pdf;capture=camera"
+              capture="camera"
+              multiple
+              className="d-none"
+              onChange={this.fileSelectorEvent}
+            />
+              Attach as PDF
+            {/* <label className=" camera " htmlFor="camera_device">
+              <img src={next} className="glyphicons" />
+            </label> */}
+            {/* <input className="input" />
+            <div className="attachPdf" onClick={this.attachFile}>
+              <img src={next} className="glyphicons" />
+            </div> */}
+          </button>
+        </div>
+      </div>
+    );
+  }
+}
+
+export default App;

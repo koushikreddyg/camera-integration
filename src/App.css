@@ -4,9 +4,22 @@
   color: #fff;
 }
 
+.close{
+  position: absolute;
+  background-color: white;
+  width: 8vh;
+  height: 8vh;
+  padding: 10px;
+  border-radius: 4vh;
+  right:0;
+  margin-top: 1vh;
+  margin-right: 1vh;
+}
+
 .imageList {
   overflow-y: scroll;
   white-space: nowrap;
+  margin-top: 1vh;
 }
 
 .scrolling-wrapper {
@@ -27,17 +40,26 @@
 }
 
 .fullImage {
-  padding: 10px;
-  height: 83vh;
+  
+  height: 81vh;
   width: 100vw;
+  
 }
 
 .options {
-  margin-top: 1.5vh;
+  background-color: yellow;
   height: 5vh;
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
+  border-radius: 10px;
+  margin-left: 1vw;
+  margin-right: 1vw;
+  color: black;
+  text-align: center;
+  width: 98vw;
+  font-size: 2vh;
+  font-weight: 900;
+  position: absolute;
+  bottom:0;
+  margin-bottom: 1vw
 }
 
 .input {
