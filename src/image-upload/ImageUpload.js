@@ -1,7 +1,7 @@
 // this component selects images and convert them to pdfs and stitch them to single pdfs
 import React, { Component } from "react";
 import jsPDF from "jspdf"; // download version 1.4.1
-import axios from "axios";
+import PropTypes from 'prop-types';
 
 import cancel from "./cancel.png";
 import add from "./add.png";
@@ -20,7 +20,6 @@ class ImageUpload extends Component {
 
   // selects images data and convert them to base 64 data
   imageSelectorEvent = async e => {
-    // const { imageUrls } = this.state;
     for (let i = 0; i <= e.target.files.length - 1; i++) {
       const imageReader = new FileReader();
       const file = e.target.files[i];
@@ -118,6 +117,10 @@ class ImageUpload extends Component {
       </div>
     );
   }
+}
+
+ImageUpload.propTypes={
+  pdfDataUrl: PropTypes.func.isRequired,
 }
 
 export default ImageUpload;
