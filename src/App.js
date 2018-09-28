@@ -1,21 +1,20 @@
 import React, { Component } from "react";
 
-import "bootstrap/dist/css/bootstrap.min.css";
-import "./App.css";
-
-import ImageUpload from "./ImageUpload";
+import ImageUpload from "./image-upload/ImageUpload";
 
 class App extends Component {
  
+
+  checkForCamera=()=>(/iphone|ipod|android|blackberry/)
+  .test(navigator.userAgent.toLowerCase())
 
   
 
   render() {
     return (
       <div>
-        
-          <ImageUpload pdfDataUrl={this.pdfDataUrl}/>
-        
+        {!this.checkForCamera()&& <h1>Camera is not supported</h1>}
+        {this.checkForCamera()&&<ImageUpload pdfDataUrl={(data)=>{}} />}   
       </div>
     );
   }

@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ImageUpload from './image-upload/ImageUpload';
+import App from './App';
 
 
-ReactDOM.render(<ImageUpload pdfDataUrl={(data)=>{}}/>, document.getElementById('root'));
+ReactDOM.render(<App />, document.getElementById('root'));
 

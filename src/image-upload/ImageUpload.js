@@ -8,7 +8,7 @@ import add from "./add.png";
 import ImageThumbnail from "./ImageThumbnail";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./App.css";
+import "./styles.css";
 
 let pdf = new jsPDF("p", "mm", "a4");
 class ImageUpload extends Component {
@@ -75,8 +75,10 @@ class ImageUpload extends Component {
     this.setState({ imageUrls: [], pdfData: "", displayImage: "" });
 
   render() {
-    const { imageUrls } = this.state;
-    const doesContainImages = !!imageUrls.length;
+    
+    console.log((/iphone|ipod|android|blackberry/).test
+    (navigator.userAgent.toLowerCase()))
+    const doesContainImages = !!this.state.imageUrls.length;
     return (
       <div>
         {doesContainImages && (
