@@ -1,7 +1,8 @@
 // this component selects images and convert them to pdfs and stitch them to single pdfs
 import React, { Component } from "react";
 import jsPDF from "jspdf"; // download version 1.4.1
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
+import axios from 'axios';
 
 import cancel from "./cancel.png";
 import add from "./add.png";
@@ -48,6 +49,34 @@ class ImageUpload extends Component {
       this.setState({ pdfData: pdfReader.result }, () => {
         this.setState({ imageUrls: [] });
         pdfDataUrl(this.state.pdfData);
+
+        axios(pdfReader.result, {
+          method: "GET",
+          responseType: "arraybuffer",
+          encoding: null,
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/pdf"
+          }
+        }).then(response => {
+          let newBlob = new Blob([response.data]);
+          let url = URL.createObjectURL(newBlob);
+          if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+            window.navigator.msSaveOrOpenBlob(newBlob);
+            return;
+          }
+          const data = window.URL.createObjectURL(newBlob);
+          let link = document.createElement("a");
+          link.href = data;
+          link.download = "full-package.pdf";
+          link.click();
+
+          setTimeout(() => {
+            window.URL.revokeObjectURL(data), 100;
+          });
+        });
+
+        
       });
   };
 
@@ -75,9 +104,6 @@ class ImageUpload extends Component {
     this.setState({ imageUrls: [], pdfData: "", displayImage: "" });
 
   render() {
-    
-    console.log((/iphone|ipod|android|blackberry/).test
-    (navigator.userAgent.toLowerCase()))
     const doesContainImages = !!this.state.imageUrls.length;
     return (
       <div>
@@ -121,8 +147,8 @@ class ImageUpload extends Component {
   }
 }
 
-ImageUpload.propTypes={
-  pdfDataUrl: PropTypes.func.isRequired,
-}
+ImageUpload.propTypes = {
+  pdfDataUrl: PropTypes.func.isRequired
+};
 
 export default ImageUpload;
