@@ -134,7 +134,7 @@ class ImageUpload extends Component {
         <input
           type="file"
           id="camera-device"
-          accept="image/jpg, image/png"
+          accept="image/jpeg, image/png, image/jpg"
           capture="camera"
           multiple
           className="d-none"

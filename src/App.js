@@ -13,8 +13,9 @@ class App extends Component {
   render() {
     return (
       <div>
-        {!this.checkForCamera()&& <h1>Camera is not supported</h1>}
-        {this.checkForCamera()&&<ImageUpload pdfDataUrl={(data)=>{}} />}   
+        {/* !this.checkForCamera()&& <h1>Camera is not supported</h1> */}
+        {/* this.checkForCamera() &&<ImageUpload pdfDataUrl={(data)=>{}} />*/}   
+        <ImageUpload pdfDataUrl={()=>{}}/>
       </div>
     );
   }
