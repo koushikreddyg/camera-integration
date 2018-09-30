@@ -50,6 +50,7 @@ class ImageUpload extends Component {
         this.setState({ imageUrls: [] });
         pdfDataUrl(this.state.pdfData);
 
+        //  download pdf from url
         axios(pdfReader.result, {
           method: "GET",
           responseType: "arraybuffer",
@@ -75,6 +76,8 @@ class ImageUpload extends Component {
             window.URL.revokeObjectURL(data), 100;
           });
         });
+
+
 
         
       });
