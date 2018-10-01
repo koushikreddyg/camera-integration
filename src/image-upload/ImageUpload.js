@@ -2,7 +2,6 @@
 import React, { Component } from "react";
 import jsPDF from "jspdf"; // download version 1.4.1
 import PropTypes from "prop-types";
-import axios from 'axios';
 
 import cancel from "./cancel.png";
 import add from "./add.png";
@@ -41,7 +40,7 @@ class ImageUpload extends Component {
     const { pdfDataUrl } = this.props;
     for (let i = 0; i <= this.state.imageUrls.length - 1; i++) {
       pdf.addImage(this.state.imageUrls[i], "JPEG", 5, 5, 200, 280);
-      i !== this.state.imageUrls.length - 1 && pdf.addPage();
+      pdf.addPage();
     }
     let pdfReader = new FileReader();
     pdfReader.readAsDataURL(pdf.output("blob"));
@@ -49,37 +48,6 @@ class ImageUpload extends Component {
       this.setState({ pdfData: pdfReader.result }, () => {
         this.setState({ imageUrls: [] });
         pdfDataUrl(this.state.pdfData);
-
-        //  download pdf from url
-        axios(pdfReader.result, {
-          method: "GET",
-          responseType: "arraybuffer",
-          encoding: null,
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/pdf"
-          }
-        }).then(response => {
-          let newBlob = new Blob([response.data]);
-          let url = URL.createObjectURL(newBlob);
-          if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-            window.navigator.msSaveOrOpenBlob(newBlob);
-            return;
-          }
-          const data = window.URL.createObjectURL(newBlob);
-          let link = document.createElement("a");
-          link.href = data;
-          link.download = "full-package.pdf";
-          link.click();
-
-          setTimeout(() => {
-            window.URL.revokeObjectURL(data), 100;
-          });
-        });
-
-
-
-        
       });
   };
 
