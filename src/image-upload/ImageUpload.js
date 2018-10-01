@@ -40,7 +40,7 @@ class ImageUpload extends Component {
     const { pdfDataUrl } = this.props;
     for (let i = 0; i <= this.state.imageUrls.length - 1; i++) {
       pdf.addImage(this.state.imageUrls[i], "JPEG", 5, 5, 200, 280);
-      pdf.addPage();
+      i !== this.state.imageUrls.length-1 && pdf.addPage();
     }
     let pdfReader = new FileReader();
     pdfReader.readAsDataURL(pdf.output("blob"));
