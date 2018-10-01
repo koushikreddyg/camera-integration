@@ -39,7 +39,7 @@
 
 .large-image {
   
-  height: 81vh;
+  height: 80vh;
   width: 100vw;
   
 }
@@ -55,9 +55,11 @@
   width: 98vw;
   font-size: 2vh;
   font-weight: 900;
-  position: absolute;
-  bottom:0;
-  margin-bottom: 1vw
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1vw;
+  overflow: auto;
 }
 
 
