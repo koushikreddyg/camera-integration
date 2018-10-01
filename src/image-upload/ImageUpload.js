@@ -48,6 +48,7 @@ class ImageUpload extends Component {
       this.setState({ pdfData: pdfReader.result }, () => {
         this.setState({ imageUrls: [] });
         pdfDataUrl(this.state.pdfData);
+        pdf.save('koushik.pdf')
       });
   };
 
