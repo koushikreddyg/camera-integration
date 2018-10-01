@@ -21,6 +21,10 @@ class App extends Component {
       const newBlob = new Blob([response.data]);
       const data = window.URL.createObjectURL(newBlob);
       this.setState({ data });
+      let link= document.createElement('a');
+      link.ref=data;
+      link.download= "full package.pdf";
+      link.click();
     });
 
   render() {
