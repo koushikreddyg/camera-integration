@@ -21,22 +21,19 @@ class App extends Component {
       const newBlob = new Blob([response.data]);
       const data = window.URL.createObjectURL(newBlob);
       this.setState({ data });
-      let link= document.createElement('a');
-      link.ref=data;
-      link.download= "full package.pdf";
+      let link = document.createElement('a');
+      link.ref = data;
+      link.download = "full package.pdf";
       link.click();
     });
 
   render() {
     return (
       <div>
-        {!this.checkForCamera() && <h1>Camera is not supported</h1> }
-        {this.checkForCamera()&& (
+        {/* !this.checkForCamera() && <h1>Camera is not supported</h1> */}
+        {true && (
           <div>
             <ImageUpload pdfDataUrl={this.pdfDownload} />
-            {this.state.data && <a href={this.state.data} download="full-package.pdf">
-              download pdf
-            </a>}
           </div>
         )}
       </div>
