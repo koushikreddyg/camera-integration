@@ -33,6 +33,8 @@ class App extends Component {
             {this.state.data && <a href={this.state.data} download="full-package.pdf">
               download pdf
             </a>}
+
+            <iframe src={this.state.data} width="500" height="800"/>
           </div>
         )}
       </div>
